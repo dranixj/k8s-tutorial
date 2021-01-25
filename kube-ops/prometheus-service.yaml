@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus
+  namespace: kube-ops
+  labels:
+    app: prometheus
+spec:
+  selector:
+    app: prometheus
+  clusterIP: None
+  ports:
+    - port: 9090
+      name: http

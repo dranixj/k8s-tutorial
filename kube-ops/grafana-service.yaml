@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: kube-ops
+  labels:
+    app: grafana
+spec:
+  selector:
+    app: grafana
+  clusterIP: None
+  ports:
+    - port: 3000
+      name: http

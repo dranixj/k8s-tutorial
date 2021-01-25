@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: nfs-server
+  name: nfs-server
+  namespace: nfs
+spec:
+  containers:
+    - name: nfs-server
+      image: erichough/nfs-server
+      securityContext:
+        capabilities:
+          add:
+          - SYS_ADMIN
+          - SETPCAP
+      ports:
+        - containerPort: 2049
+        - containerPort: 111
+        - containerPort: 32765
+        - containerPort: 32767
+        - containerPort: 32769
+        - containerPort: 32771
+        - containerPort: 32773
+        - containerPort: 32775
+        - containerPort: 32777
+        - containerPort: 32779
+      volumeMounts:
+        - mountPath: /nfsshare
+          name: nfsshare
+      env:
+        - name: NFS_EXPORT_0
+          value: /nfsshare *(rw,no_subtree_check,no_root_squash)
+  volumes:
+    - name: nfsshare
+      emptyDir: {}
