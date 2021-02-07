@@ -19,6 +19,11 @@ spec:
       containers:
         - name: nfs-client-provisioner
           image: quay.io/external_storage/nfs-client-provisioner:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100m
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
@@ -26,11 +31,15 @@ spec:
             - name: PROVISIONER_NAME
               value: dranixj.me/nfs
             - name: NFS_SERVER
-              value: 10.1.0.79
+              #value: 10.1.0.79
+              value: 172.12.3.100
             - name: NFS_PATH
-              value: /nfsshare
+              #value: /nfsshare
+              value: /mnt/sharefolder
       volumes:
         - name: nfs-client-root
           nfs:
-            server: 10.1.0.79
-            path: /nfsshare
+            #server: 10.1.0.79
+            #path: /nfsshare
+            server: 172.12.3.100
+            path: /mnt/sharefolder

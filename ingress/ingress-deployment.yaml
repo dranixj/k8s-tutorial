@@ -26,6 +26,10 @@ spec:
       containers:
         - name: nginx-ingress-controller
           image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100m
           args:
             - /nginx-ingress-controller
             - --configmap=$(POD_NAMESPACE)/ingress-configmap

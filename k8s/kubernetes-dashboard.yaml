@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: kubernetes-dashboard
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#  name: kubernetes-dashboard
 
----
+# ---
 
 apiVersion: v1
 kind: ServiceAccount
@@ -45,6 +45,7 @@ spec:
 
 ---
 
+#认证替换成 kubectl create secret generic kubernetes-dashboard-certs --from-file=tls.crt --from-file=tls.key -n kubernetes-dashboard的方式创建
 apiVersion: v1
 kind: Secret
 metadata:
@@ -188,6 +189,10 @@ spec:
       containers:
         - name: kubernetes-dashboard
           image: kubernetesui/dashboard:v2.1.0
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100m
           ports:
             - containerPort: 8443
               protocol: TCP

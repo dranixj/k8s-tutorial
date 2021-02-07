@@ -1,20 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-nginx-kibana
+  name: traefik-ingress-kibana
   namespace: logging
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: traefik
 spec:
   # 路由规则
   rules:
-  - host: kibana.k8s
+  - host: kibana.k8s.local
     http:
       paths:
       - pathType: Prefix

@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: traefik-ingress-grafana
+  name: traefik-ingress-jenkins
   namespace: kube-ops
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   # 路由规则
   rules:
-  - host: grafana.k8s.local
+  - host: jenkins.k8s.local
     http:
       paths:
       - pathType: Prefix
@@ -16,7 +16,7 @@ spec:
         backend:
           service:
             # 后台部署的 Service Name
-            name: grafana
+            name: jenkins
             # 后台部署的 Service Port
             port:
-              number: 3000
+              number: 8080

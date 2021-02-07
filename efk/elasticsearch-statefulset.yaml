@@ -5,7 +5,7 @@ metadata:
   namespace: logging
 spec:
   serviceName: elasticsearch
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: elasticsearch
@@ -14,6 +14,17 @@ spec:
       labels:
         app: elasticsearch
     spec:
+      #调度 确保Pods均匀分布到Nodes上
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - elasticsearch
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
         image: elasticsearch:7.10.1
@@ -40,31 +51,36 @@ spec:
               fieldRef:
                 fieldPath: metadata.name    
           #单节点模式
-          - name: discovery.type
-            value: single-node
+          #- name: discovery.type
+          #  value: single-node
           #集群模式      
-          #- name: discovery.seed_hosts
-          #  value: "es-cluster-0.elasticsearch,es-cluster-1.elasticsearch,es-cluster-2.elasticsearch"
-          #- name: cluster.initial_master_nodes
-          #  value: "es-cluster-0,es-cluster-1,es-cluster-2"
+          - name: discovery.seed_hosts
+            value: "es-cluster-0.elasticsearch,es-cluster-1.elasticsearch,es-cluster-2.elasticsearch"
+          - name: cluster.initial_master_nodes
+            value: "es-cluster-0,es-cluster-1,es-cluster-2"
           - name: ES_JAVA_OPTS
             value: "-Xms512m -Xmx512m"
+      #启动前执行容器
       initContainers:
-      - name: fix-permissions
-        image: busybox
-        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: data
-          mountPath: /usr/share/elasticsearch/data
+      #根据NFS服务器的设置，可能需要改变用户组
+      # 服务器配置 /mnt/sharefolder *(rw,sync,no_subtree_check,all_squash) 时，不需要也无法改变文件夹的用户组
+      # - name: fix-permissions
+      #   image: busybox
+      #   command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+      #   securityContext:
+      #     privileged: true
+      #   volumeMounts:
+      #   - name: data
+      #     mountPath: /usr/share/elasticsearch/data
       - name: increase-vm-max-map
         image: busybox
+        imagePullPolicy: IfNotPresent
         command: ["sysctl", "-w", "vm.max_map_count=262144"]
         securityContext:
           privileged: true
       - name: increase-fd-ulimit
         image: busybox
+        imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "ulimit -n 65536"]
         securityContext:
           privileged: true
@@ -75,7 +91,7 @@ spec:
         app: elasticsearch
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: hostpath
+      storageClassName: nfs-storageclass
       resources:
         requests:
-          storage: 300Mi
+          storage: 5Gi

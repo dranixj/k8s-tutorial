@@ -4,7 +4,7 @@ metadata:
   name: prometheus
   namespace: kube-ops
   annotations:
-    volume.beta.kubernetes.io/storage-class: "hostpath"
+    volume.beta.kubernetes.io/storage-class: nfs-storageclass
 spec:
   accessModes:
   - ReadWriteOnce

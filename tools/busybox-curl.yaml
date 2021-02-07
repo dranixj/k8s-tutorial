@@ -7,6 +7,10 @@ spec:
   containers:
   - name: busybox-curl
     image: odise/busybox-curl:latest
+    resources:
+      limits:
+        cpu: 100m
+        memory: 100m
     command:
       - sleep
       - "3600"

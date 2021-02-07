@@ -18,6 +18,7 @@ spec:
       containers:
       - image: prom/prometheus:latest
         name: prometheus
+        imagePullPolicy: IfNotPresent
         command:
         - "/bin/prometheus"
         args:

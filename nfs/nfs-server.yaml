@@ -9,6 +9,10 @@ spec:
   containers:
     - name: nfs-server
       image: erichough/nfs-server
+      resources:
+        limits:
+          cpu: 500m
+          memory: 500m
       securityContext:
         capabilities:
           add:

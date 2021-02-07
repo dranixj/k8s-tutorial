@@ -136,6 +136,10 @@ spec:
         - --kubelet-insecure-tls
         image: k8s.gcr.io/metrics-server/metrics-server:v0.4.1
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100m
         livenessProbe:
           failureThreshold: 3
           httpGet:

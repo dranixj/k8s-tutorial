@@ -21,7 +21,10 @@ data:
     - job_name: kubernetes-nodes
       static_configs:
       - targets:
-        - docker-desktop:9100
+        - 172.12.3.100:9100
+        - 172.12.3.101:9100
+        - 172.12.3.102:9100
+        - 172.12.3.103:9100
 
     - job_name: kubernetes-apiservers
       kubernetes_sd_configs:
